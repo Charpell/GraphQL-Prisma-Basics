@@ -2,12 +2,48 @@ import { GraphQLServer } from 'graphql-yoga';
 
 // Scalar Types => String, Boolean, Int, Float, ID
 
+// Demo user data
+const users = [{
+  id: '1',
+  name: 'Andrew',
+  email: 'andrew@example.com',
+  age: 27
+},
+{
+  id: '2',
+  name: 'Sarah',
+  email: 'sarah@example.com'
+},
+{
+  id: '3',
+  name: 'Mike',
+  email: 'mike@example.com',
+  age: 27
+}]
+
+// Demo post data
+const posts = [{
+  id: '10',
+  title: 'GraphQL 101',
+  body: 'This is how to use GraphQl..',
+  published: true
+},{
+  id: '11',
+  title: 'GraphQL 201',
+  body: 'This is how to use GraphQl..',
+  published: false
+},{
+  id: '13',
+  title: 'Programming Music',
+  body: 'This is how to use GraphQl..',
+  published: false
+}]
+
 // Type definations (schema)
 const typeDefs = `
   type Query {
-    greeting(name: String!, position: String!): String!
-    grades: [Int!]!
-    add(numbers: [Float!]!): Float!
+    users(query: String): [User!]!
+    posts(query: String): [Post!]!
     me: User!
     post: Post!
   }
@@ -30,23 +66,28 @@ const typeDefs = `
 // Resplvers
 const resolvers = {
   Query: {
-    greeting(parent, args, ctx, info) {
-      if (args.name && args.position) {
-        return `Hello, ${args.name}! You are my favorite ${args.posotion}.`
+    users(parent, args, ctx, info) {
+      if (!args.query) {
+        return users
       }
-      return 'Hello'
-    },
-    grades(parent, args, ctx, info) {
-      return [80, 34, 95]
-    },
-    add(parent, args, ctx, info) {
-      if (args.numbers.length === 0) {
-        return 0
-      }
-      return args.numbers.reduce((accumulator, currentValue) => {
-        return accumulator + currentValue
+
+      return users.filter(user => {
+        return user.name.toLocaleLowerCase().includes(args.query.toLocaleLowerCase())
       })
     },
+
+    posts(parent, args, ctx, info) {
+      if (!args.query) {
+        return posts
+      }
+
+      return posts.filter(post => {
+        const isTitleMatch = post.title.toLocaleLowerCase().includes(args.query.toLocaleLowerCase())
+        const isBodyMatch = post.body.toLocaleLowerCase().includes(args.query.toLocaleLowerCase())
+        return isTitleMatch || isBodyMatch
+      })
+    },
+
     me() {
       return {
         id: '1234',
@@ -55,6 +96,7 @@ const resolvers = {
         age: 20
       }
     },
+
     post() {
       return {
         id: '092',
