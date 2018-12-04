@@ -20,7 +20,7 @@ const resolvers = {
       return 'abc123'
     },
     name() {
-      return 'Ebuka'
+      return 'Ebuka Umeh'
     },
     age() {
       return 27
