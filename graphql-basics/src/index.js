@@ -42,11 +42,36 @@ const posts = [{
   author: '2'
 }]
 
+
+const comments = [{
+  id: '102',
+  text: 'This worked well for me. Thanks!',
+  author: '3',
+  post: '10'
+}, {
+  id: '103',
+  text: 'Glad you enjoyed it.',
+  author: '1',
+  post: '10'
+}, {
+  id: '104',
+  text: 'This did no work.',
+  author: '2',
+  post: '11'
+}, {
+  id: '105',
+  text: 'Nevermind. I got it to work.',
+  author: '1',
+  post: '11'
+}]
+
+
 // Type definations (schema)
 const typeDefs = `
   type Query {
     users(query: String): [User!]!
     posts(query: String): [Post!]!
+    comments: [Comment!]!
     me: User!
     post: Post!
   }
@@ -57,6 +82,7 @@ const typeDefs = `
     email: String!
     age: Int
     posts: [Post!]!
+    comments: [Comment!]!
   }
 
   type Post {
@@ -65,6 +91,14 @@ const typeDefs = `
     body: String!
     published: Boolean!
     author: User!
+    comments: [Comment!]!
+  }
+  
+  type Comment {
+    id: ID!
+    text: String!
+    author: User!
+    post: Post!
   }
 `
 
@@ -93,6 +127,10 @@ const resolvers = {
       })
     },
 
+    comments(parent, args, ctx, info) {
+      return comments
+    },
+
     me() {
       return {
         id: '1234',
@@ -117,6 +155,24 @@ const resolvers = {
       return users.find(user => {
         return user.id === parent.author
       })
+    },
+    comments(parent, args, ctx, info) {
+        return comments.filter((comment) => {
+            return comment.post === parent.id
+        })
+    }
+  },
+
+  Comment: {
+    author(parent, args, ctx, info) {
+        return users.find((user) => {
+            return user.id === parent.author
+        })
+    },
+    post(parent, args, ctx, info) {
+        return posts.find((post) => {
+            return post.id === parent.post
+        })
     }
   },
   
@@ -125,6 +181,11 @@ const resolvers = {
       return posts.filter(post => {
         return post.author === parent.id
       })
+    },
+    comments(parent, args, ctx, info) {
+        return comments.filter((comment) => {
+            return comment.author === parent.id
+        })
     }
   }
 }
