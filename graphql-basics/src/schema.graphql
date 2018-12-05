@@ -15,6 +15,7 @@ type Query {
     updatePost(id: ID!, data: UpdatePostInput!): Post!
     createComment(data: CreateCommentInput!): Comment!
     deleteComment(id: ID!): Comment!
+    updateComment(id: ID!, data: UpdateCommentInput!): Comment!
 
   }
 
@@ -47,6 +48,10 @@ type Query {
       text: String!
       author: ID!
       post: ID!
+  }
+
+  input UpdateCommentInput {
+    text: String
   }
 
   type User {
