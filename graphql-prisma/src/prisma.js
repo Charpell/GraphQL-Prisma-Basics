@@ -58,6 +58,12 @@ const prisma = new Prisma({
 
 //  Create Post Function
 const createPostForUser = async (authorId, data) => {
+  const userExists = await prisma.exists.User({ id: authorId })
+
+  if (!userExists) {
+    throw new Error('User not found')
+  }
+
   const post = await prisma.mutation.createPost({
     data: {
       ...data,
@@ -67,45 +73,59 @@ const createPostForUser = async (authorId, data) => {
         }
       }
     }
-  }, '{ id }')
-  const user = await prisma.query.user({
-    where: {
-      id: authorId
-    }
-  }, '{ id name email posts { id title published} }')
-  return user
+  }, '{ author { id name email posts { id title published } } }')
+  
+  return post.author
 }
 
 
 // Using the function
-createPostForUser("cjpc7xjf4001s0811g4hypnjg", {
-  title: 'Great books to read',
-  body: "The War of Art",
-  published: true
-}).then(user => {
-  console.log(JSON.stringify(user, undefined, 2))
-})
+// createPostForUser("cjpc7xjf4001s0811g4hypnjg", {
+//   title: 'Great books to read',
+//   body: "The War of Art",
+//   published: true
+// }).then(user => {
+//   console.log(JSON.stringify(user, undefined, 2))
+// }).catch(error => {
+//   console.log(error)
+// })
 
 
 
 // Update Post Function
 const updatePostForUser = async (postId, data) => {
+  const postExists = await prisma.exists.Post({ id: postId })
+
+  if (!postExists) {
+    throw new Error('Post not found')
+  }
+
   const post = await prisma.mutation.updatePost({
     where: {
       id: postId
     },
     data
-  }, '{ author { id } }')
-  const user = await prisma.query.user({
-    where: {
-      id: post.author.id
-    }
-  }, '{ id name email posts { id title published } }')
-  return user
+  }, '{ author { id name email posts { id title published } } }')
+
+  return post.author
 }
 
 
 // Using the Function
-updatePostForUser("cjpcbjokm006e0811gkfqe100", { published: false }).then(user => {
+updatePostForUser("cjpcbjokm006e0811gkfqe100", { published: true }).then(user => {
   console.log(JSON.stringify(user, undefined, 2))
+}).catch(error => {
+  console.log(error.message)
+})
+
+
+
+// prisma.exists
+prisma.exists.Comment({
+  id: "cjpc8tks4003508115jdktz9o",
+  author: {
+    id: "cjpc8rwwz00310811p3szsg8r"
+  }
+}).then(exists => {
+  console.log(exists)
 })
