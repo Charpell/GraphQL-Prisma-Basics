@@ -1,0 +1,61 @@
+Create User
+
+mutation {
+  createUser(
+    data: {
+      username: "SleepyGal"
+    }
+  ) {
+    id
+    username
+  }
+}
+
+
+Create Book
+
+mutation {
+  createBook( 
+  	data: {
+      title: "Rest",
+      author: "Alex Pang",
+      isbn: "abc123"
+    }
+  ) {
+    id
+    title
+    author
+    isbn
+    reviews {
+      id
+      text
+      rating
+    }
+  }
+}
+
+
+Create Review 
+
+mutation {
+  createReview(
+    data: {
+      text: "It was a good read.",
+      rating: 5,
+      book: {
+        connect: {
+          id: "cjpcggor800c908116ebtur0h"
+        }
+      },
+      author: {
+        connect: {
+          id: "cjpcga9rg00c50811ml6dztwn"
+        }
+      }
+    }
+  ) {
+    id
+    text
+    rating
+  }
+}
