@@ -61,7 +61,6 @@ type Query {
 
   input CreateCommentInput {
       text: String!
-      author: ID!
       post: ID!
   }
 
