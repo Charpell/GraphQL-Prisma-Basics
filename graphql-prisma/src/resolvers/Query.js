@@ -29,20 +29,10 @@ const Query = {
     }
 
     return prisma.query.posts(opArgs, info)
-
-    // if (!args.query) {
-    //   return db.posts
-    // }
-
-    // return db.posts.filter(post => {
-    //   const isTitleMatch = post.title.toLocaleLowerCase().includes(args.query.toLocaleLowerCase())
-    //   const isBodyMatch = post.body.toLocaleLowerCase().includes(args.query.toLocaleLowerCase())
-    //   return isTitleMatch || isBodyMatch
-    // })
   },
 
-  comments(parent, args, { db }, info) {
-    return db.comments
+  comments(parent, args, { prisma }, info) {
+    return prisma.query.comments(null, info)
   },
 
   me() {
