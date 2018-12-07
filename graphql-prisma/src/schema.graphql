@@ -28,13 +28,11 @@ type Query {
   input CreateUserInput {
     name: String!
     email: String!
-    age: Int
   }
 
   input UpdateUserInput {
     name: String
     email: String
-    age: Int
   }
 
   input CreatePostInput {
