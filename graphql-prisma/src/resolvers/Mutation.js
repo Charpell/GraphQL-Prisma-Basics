@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import getUserId from '../utils/getUserId';
 
 // Take in password -> Validate password -> Hash password -> Generate auth token
 
@@ -78,7 +79,9 @@ const Mutation = {
     }, info)
   },
 
-  createPost(parent, args, { db, prisma }, info) {
+  createPost(parent, args, { prisma, request }, info) {
+    const userId = getUserId(request)
+
     return prisma.mutation.createPost({
         data: {
             title: args.data.title,
@@ -86,7 +89,7 @@ const Mutation = {
             published: args.data.published,
             author: {
                 connect: {
-                    id: args.data.author
+                    id: userId
                 }
             }
         }
