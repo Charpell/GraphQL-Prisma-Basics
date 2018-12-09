@@ -1,0 +1,10 @@
+Preparing for Deployment
+
+1. Production database
+2. Host our Prisma docker container
+3. Host our Node.js application
+
+
+Services
+Heroku (free)
+Prisma Cloud (free)
