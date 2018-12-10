@@ -23,5 +23,8 @@
     "graphql-yoga": "^1.14.10",
     "prisma-binding": "^2.1.1",
     "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "jest": "^23.5.0"
   }
 }
